@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold">Gestión de Alistamientos</h3>
+        <button class="btn btn-primary-minimal" style="background-color: #00AB55; color: white; border-radius: 8px;"
+            data-bs-toggle="modal" data-bs-target="#modalRegistro">
+            + Nuevo Alistamiento
+        </button>
+    </div>
+
+    <div class="card-minimal">
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Placa</th>
+                        <th>Mecánico</th>
+                        <th>Fecha</th>
+                        <th class="text-center">Checks (F | L | A | Ll)</th>
+                        <th>Observaciones</th>
+                        <th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-alistamientos">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalRegistro" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 16px;">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold">Registrar Alistamiento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formAlistamiento">
+                    <div class="mb-3">
+                        <label class="form-label">Placa</label>
+                        <input type="text" id="placa" class="form-control" required placeholder="ABC-123">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mecánico</label>
+                        <input type="text" id="mecanico" class="form-control" required placeholder="Nombre del técnico">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fecha</label>
+                        <input type="date" id="fecha" class="form-control" required>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3 p-2 bg-light rounded">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="frenos_ok">
+                            <label class="form-check-label">Frenos</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="luces_ok">
+                            <label class="form-check-label">Luces</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="aceite_ok">
+                            <label class="form-check-label">Aceite</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="llantas_ok">
+                            <label class="form-check-label">Llantas</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Observaciones</label>
+                        <textarea id="observaciones" class="form-control" rows="2"></textarea>
+                    </div>
+                    <button type="submit" class="btn w-100 text-white" style="background-color: #00AB55;">Guardar
+                        Registro</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    // 1. CARGAR DATOS (GET)
+    async function cargarAlistamientos() {
+        const res = await fetch('/alistamientos');
+        const data = await res.json();
+        const tabla = document.getElementById('tabla-alistamientos');
+
+        tabla.innerHTML = data.map(item => `
+            <tr>
+                <td><span class="fw-bold">${item.placa}</span></td>
+                <td>${item.mecanico}</td>
+                <td>${item.fecha}</td>
+                <td class="text-center">
+                    ${item.frenos_ok ? '✅' : '❌'} ${item.luces_ok ? '✅' : '❌'} 
+                    ${item.aceite_ok ? '✅' : '❌'} ${item.llantas_ok ? '✅' : '❌'}
+                </td>
+                <td><small class="text-muted">${item.observaciones || '-'}</small></td>
+                <td class="text-end">
+                    <button class="btn btn-sm btn-outline-danger border-0" onclick="eliminar('${item.placa}')">🗑️</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    // 2. CREAR REGISTRO (POST)
+    document.getElementById('formAlistamiento').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const nuevo = {
+            placa: document.getElementById('placa').value,
+            mecanico: document.getElementById('mecanico').value,
+            fecha: document.getElementById('fecha').value,
+            frenos_ok: document.getElementById('frenos_ok').checked,
+            luces_ok: document.getElementById('luces_ok').checked,
+            aceite_ok: document.getElementById('aceite_ok').checked,
+            llantas_ok: document.getElementById('llantas_ok').checked,
+            observaciones: document.getElementById('observaciones').value
+        };
+
+        const res = await fetch('/alistamientos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(nuevo)
+        });
+
+        if (res.ok) {
+            location.reload(); // Recarga para ver los cambios
+        }
+    });
+
+    // 3. ELIMINAR (DELETE)
+    async function eliminar(placa) {
+        if (confirm(`¿Eliminar alistamiento de la placa ${placa}?`)) {
+            const res = await fetch(`/alistamientos/${placa}`, { method: 'DELETE' });
+            if (res.ok) cargarAlistamientos();
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', cargarAlistamientos);
+</script>
+{% endblock %}
