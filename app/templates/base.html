@@ -1,106 +1,138 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MicroTaller - Minimal Admin</title>
-    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
 
     <style>
-        :root {
-            --primary-color: #00AB55;
-            --bg-body: #F9FAFB;
-            --text-main: #212B36;
-            --sidebar-width: 280px;
-        }
+      /* Variables CSS para cambiar los colores fácilmente en un solo lugar */
+      :root {
+        --primary-color: #00ab55; /* Verde principal */
+        --bg-body: #f9fafb; /* Gris muy claro de fondo */
+        --text-main: #212b36; /* Color de texto */
+        --sidebar-width: 280px; /* Ancho del menú lateral */
+      }
 
-        body {
-            font-family: 'Public Sans', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-        }
+      body {
+        font-family: "Public Sans", sans-serif;
+        background-color: var(--bg-body);
+        color: var(--text-main);
+      }
 
-        /* Sidebar con estilo Minimal */
-        .sidebar {
-            width: var(--sidebar-width);
-            height: 100vh;
-            position: fixed;
-            background: white;
-            border-right: 1px dashed rgba(145, 158, 171, 0.2);
-            padding: 24px;
-        }
+      /* Diseño del Menú Lateral Fijo */
+      .sidebar {
+        width: var(--sidebar-width);
+        height: 100vh; /* Ocupa toda la altura de la pantalla */
+        position: fixed; /* Se queda quieto al hacer scroll */
+        background: white;
+        border-right: 1px dashed rgba(145, 158, 171, 0.2);
+        padding: 24px;
+      }
 
-        .main-content {
-            margin-left: var(--sidebar-width);
-            padding: 40px;
-        }
+      /* Diseño del Contenido Principal */
+      /* Le doy margen a la izquierda para que no quede tapado por el menú lateral */
+      .main-content {
+        margin-left: var(--sidebar-width);
+        padding: 40px;
+      }
 
-        .card-minimal {
-            background: white;
-            border: none;
-            border-radius: 16px;
-            box-shadow: rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px;
-            padding: 24px;
-        }
+      /* Clases utilitarias para tarjetas bonitas */
+      .card-minimal {
+        background: white;
+        border: none;
+        border-radius: 16px;
+        box-shadow:
+          rgba(145, 158, 171, 0.2) 0px 0px 2px 0px,
+          rgba(145, 158, 171, 0.12) 0px 12px 24px -4px;
+        padding: 24px;
+      }
 
-        .nav-link {
-            color: #637381;
-            font-weight: 600;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
+      /* Estilos de los enlaces del menú */
+      .nav-link {
+        color: #637381;
+        font-weight: 600;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
 
-        .nav-link:hover,
-        .nav-link.active {
-            background-color: rgba(0, 171, 85, 0.08);
-            color: var(--primary-color);
-        }
+      /* Efecto al pasar el mouse o cuando el enlace está activo */
+      .nav-link:hover,
+      .nav-link.active {
+        background-color: rgba(0, 171, 85, 0.08);
+        color: var(--primary-color);
+      }
 
-        /* Estilo para el logo */
-        .logo-box {
-            width: 40px;
-            height: 40px;
-            background: var(--primary-color);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0px 4px 10px rgba(0, 171, 85, 0.3);
-        }
+      .logo-box {
+        width: 40px;
+        height: 40px;
+        background: var(--primary-color);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0px 4px 10px rgba(0, 171, 85, 0.3);
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
+  <body>
     <div class="sidebar">
-        <a href="/" class="d-flex align-items-center mb-5 text-decoration-none" style="color: inherit;">
-            <div class="logo-box me-3">
-                <i class="bi bi-wrench-adjustable text-white" style="font-size: 1.4rem;"></i>
-            </div>
-            <h5 class="fw-bold m-0" style="letter-spacing: -0.5px;">
-                Micro<span style="color: var(--primary-color);">Taller</span>
-            </h5>
-        </a>
+      <a
+        href="/"
+        class="d-flex align-items-center mb-5 text-decoration-none"
+        style="color: inherit"
+      >
+        <div class="logo-box me-3">
+          <i
+            class="bi bi-wrench-adjustable text-white"
+            style="font-size: 1.4rem"
+          ></i>
+        </div>
+        <h5 class="fw-bold m-0" style="letter-spacing: -0.5px">
+          Micro<span style="color: var(--primary-color)">Taller</span>
+        </h5>
+      </a>
 
-        <nav class="nav flex-column">
-            <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">📊 Dashboard</a>
-            <a class="nav-link {% if request.path == '/alistamientos-view' %}active{% endif %}"
-                href="/alistamientos-view">🏍️ Alistamientos</a>
-            <a class="nav-link {% if request.path == '/citas-view' %}active{% endif %}" href="/citas-view">📅 Citas</a>
-        </nav>
+      <nav class="nav flex-column">
+        <a
+          class="nav-link {% if request.path == '/' %}active{% endif %}"
+          href="/"
+          >📊 Dashboard</a
+        >
+
+        <a
+          class="nav-link {% if request.path == '/alistamientos-view' %}active{% endif %}"
+          href="/alistamientos-view"
+          >🏍️ Alistamientos</a
+        >
+
+        <a
+          class="nav-link {% if request.path == '/citas-view' %}active{% endif %}"
+          href="/citas-view"
+          >📅 Citas</a
+        >
+      </nav>
     </div>
 
-    <main class="main-content">
-        {% block content %}{% endblock %}
-    </main>
+    <main class="main-content">{% block content %}{% endblock %}</main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
+  </body>
 </html>
